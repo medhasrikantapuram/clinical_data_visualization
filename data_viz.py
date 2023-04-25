@@ -92,7 +92,8 @@ with tab3:
     top_24 = adae_subs['AEDECOD'].value_counts().index.tolist()[:24]
     adae_subset = adae_subs[adae_subs['AEDECOD'].isin(top_24)]
     dot_plot_df = pd.DataFrame(adae_subset.groupby(['TRTA','AEDECOD']).size()).reset_index()
-    fig = px.scatter(dot_plot_df, y="AEDECOD", x=0, color="TRTA",symbol="TRTA",height=800,hover_name='AEDECOD')
+    dot_plot_df.rename(columns={0:'Count'},inplace=True)
+    fig = px.scatter(dot_plot_df, y="AEDECOD", x='Count', color="TRTA",symbol="TRTA",height=700,hover_name='AEDECOD')
     fig.update_traces(marker_size=8)
     fig.update_layout(title="Top 25 Treatment Emergent Adverse Events",
                   xaxis_title="Count",
