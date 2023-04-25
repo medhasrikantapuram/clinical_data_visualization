@@ -89,12 +89,14 @@ with tab2:
     st.plotly_chart(fig3,use_container_width = True)
 with tab3:
     adae_subs = adae[adae['TRTEMFL']=='Y']
-    top_20 = adae_subs['AEDECOD'].value_counts().index.tolist()[:20]
-    adae_subset = adae_subs[adae_subs['AEDECOD'].isin(top_20)]
-    fig2 = px.histogram(adae_subset, x="TRTA", color="AEDECOD",color_discrete_sequence=px.colors.qualitative.Light24,
-                        title='Treatment Emergent Adverse Events')
-    fig2.update_layout(
-           legend_title="Adverse Events",
-           xaxis_title="Treatment",
-           yaxis_title="Count")
-    st.plotly_chart(fig2,use_container_width = True)
+    top_24 = adae_subs['AEDECOD'].value_counts().index.tolist()[:24]
+    adae_subset = adae_subs[adae_subs['AEDECOD'].isin(top_24)]
+    dot_plot_df = pd.DataFrame(adae_subset.groupby(['TRTA','AEDECOD']).size()).reset_index()
+    fig = px.scatter(dot_plot_df, y="AEDECOD", x=0, color="TRTA",symbol="TRTA",height=800,hover_name='AEDECOD')
+    fig.update_traces(marker_size=8)
+    fig.update_layout(title="Top 25 Treatment Emergent Adverse Events",
+                  xaxis_title="Count",
+                  yaxis_title="Adverse Events",
+                  legend_title="Treatment Arms"
+                  )
+    st.plotly_chart(fig,use_container_width = True)
